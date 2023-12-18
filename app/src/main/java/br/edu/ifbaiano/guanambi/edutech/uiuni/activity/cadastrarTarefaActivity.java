@@ -53,6 +53,46 @@ public class cadastrarTarefaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                Task task = new Task();
+                task.setDescricao(edtDescricao.getText().toString());
+                task.isUrgente(urgente.isChecked());
+                task.isImporante(importante.isChecked());
+                task.setUsuario(user.getId());
+
+
+                UserApiService service = ServiceGenerator.createService(UserApiService.class);
+                Call<User> callToken = service.obterToken(user);
+
+                callToken.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        userAux = response.body();
+                        TarefaApiService tarefaApiService = ServiceGenerator.createService(TarefaApiService.class);
+                        Call<Task> call1 = tarefaApiService.criarTarefa("Bearer "+userAux.getAccess(),task);
+
+                        call1.enqueue(new Callback<Task>() {
+                            @Override
+                            public void onResponse(Call<Task> call, Response<Task> response) {
+                                Toast.makeText(cadastrarTarefaActivity.this, "Tarefa criada com sucesso", Toast.LENGTH_SHORT).show();
+
+                                Intent it = new Intent(cadastrarTarefaActivity.this, principalActivity.class);
+                                startActivity(it);
+
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Task> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                    }
+                });
 
 
 

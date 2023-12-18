@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import br.edu.ifbaiano.guanambi.edutech.uiuni.R;
@@ -12,12 +13,12 @@ import br.edu.ifbaiano.guanambi.edutech.uiuni.R;
 public class loginActivity extends AppCompatActivity {
 
     TextView tvCad;
+    EditText edt_username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
         tvCad = findViewById(R.id.txt_cadastrar);
 

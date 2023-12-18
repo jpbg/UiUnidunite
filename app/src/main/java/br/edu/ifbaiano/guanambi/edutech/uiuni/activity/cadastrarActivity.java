@@ -36,6 +36,7 @@ public class cadastrarActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edt_senha);
 
 
+
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,7 +45,46 @@ public class cadastrarActivity extends AppCompatActivity {
                 u.setMail(edtMail.getText().toString());
                 u.setPassword(edtPassword.getText().toString());
 
+                UserApiService service = ServiceGenerator.createService(UserApiService.class);
+                Call<User> call = service.criarUsuario(u);
 
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+
+                        if (response.isSuccessful()) {
+
+
+                        User user = response.body();
+
+                        SharedPreferences sharedPref = getSharedPreferences("appUiUni", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("user",u.getUsername());
+                        editor.putString("mail",u.getMail());
+                        editor.putString("password",u.getPassword());
+                        editor.putString("id",user.getId().toString());
+                        editor.commit();
+
+                        Toast.makeText(cadastrarActivity.this, "Usuário cadastrado com sucesso", Toast.LENGTH_SHORT).show();
+
+                        Intent it = new Intent(cadastrarActivity.this, principalActivity.class);
+
+                        startActivity(it);
+
+                        }else{
+
+                            Toast.makeText(getApplicationContext(),"Erro na chamada ao servidor", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                        Toast.makeText(cadastrarActivity.this, "Erro ao criar usuário.", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
         });

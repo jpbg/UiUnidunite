@@ -11,7 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-
     public static final String API_URL = "https://api.hostmain.com.br/";
 
     public static <S> S createService(Class<S> serviceClass){
@@ -22,7 +21,8 @@ public class ServiceGenerator {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS);
         httpClient.addInterceptor(loggingInterceptor);
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create(new Gson())).client(httpClient.build()).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create(new Gson())).client(httpClient.build()).build();
         return retrofit.create(serviceClass);
 
     }
